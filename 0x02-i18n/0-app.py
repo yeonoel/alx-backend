@@ -4,13 +4,13 @@
 from flask import Flask, render_template
 from flask_babel import Babel
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 babel = Babel(app)
 
 
 class Config(object):
     """ list des langues prises en charges"""
-    LANGUAGES = ["en", "fr"]
+    LANGUAGES = ['en', 'fr']
     # default config
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
@@ -19,10 +19,10 @@ class Config(object):
 app.config.from_object(Config)
 
 
-@app.route('/')
+@app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     """ return template """
-    return render_template('index.html')
+    return render_template('1-index.html')
 
 
 if '__name__' == '__main__':

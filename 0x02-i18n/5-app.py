@@ -36,6 +36,8 @@ def get_user() -> Union[dict, None]:
     except Exception:
         user = None
 
+    return user
+
 
 @app.before_request
 def before_request():

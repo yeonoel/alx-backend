@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Mock logging in."""
 
-from typing import Union
-from flask import Flask, render_template, request, g
 from flask_babel import Babel
+from flask import Flask, render_template, request, g
+from typing import Union
 
 app = Flask(__name__, template_folder='templates')
 babel = Babel(app)
@@ -47,7 +47,7 @@ def before_request():
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index() -> str:
     """ return template """
-    return render_template('5-index.html')
+    return render_template('666666-index.html')
 
 
 @babel.localeselector
@@ -56,6 +56,16 @@ def get_locale() -> str:
     locale = request.args.get('locale')
     if locale in app.config['LANGUAGES']:
         return locale
+
+    if g.user:
+        locale = g.user.get("locale")
+        if locale and locale in app.config['LANGUAGES']:
+            return locale
+
+    locale = request.headers.get('locale')
+    if locale and locale in app.config['LANGUAGES']:
+        return locale
+
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 

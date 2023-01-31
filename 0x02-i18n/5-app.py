@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mock logging in."""
+"""Mock logging in"""
 
 from typing import Union
 from flask import Flask, render_template, request, g
@@ -10,9 +10,8 @@ babel = Babel(app)
 
 
 class Config(object):
-    """ list des langues prises en charges"""
+    """Babel configuration"""
     LANGUAGES = ['en', 'fr']
-    # default config
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
@@ -29,9 +28,9 @@ users = {
 
 
 def get_user() -> Union[dict, None]:
-    """ return a user dictionary or None."""
+    """Get user from session as per variable"""
     try:
-        login_as = app.args.get('login_as', None)
+        login_as = request.args.get('login_as', None)
         user = users[int(login_as)]
     except Exception:
         user = None
@@ -39,25 +38,25 @@ def get_user() -> Union[dict, None]:
 
 @app.before_request
 def before_request():
-    """find a user if any, and set it as a global on flask.g.user."""
+    """OPerations b4 requests"""
     user = get_user()
     g.user = user
 
 
-@app.route('/', methods=['GET'], strict_slashes=False)
+@app.route("/", methods=['GET'], strict_slashes=False)
 def index() -> str:
-    """ return template """
+    """render template for Babel usage"""
     return render_template('5-index.html')
 
 
 @babel.localeselector
 def get_locale() -> str:
-    """Get locale from request. """
+    """determine the best match with supported lang."""
     locale = request.args.get('locale')
     if locale in app.config['LANGUAGES']:
         return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-if '__name__' == '__main__':
-    app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
